@@ -3,7 +3,9 @@ package com.maksy.chefapp.controller;
 import com.maksy.chefapp.dto.DishDTO;
 import com.maksy.chefapp.model.Dish;
 import com.maksy.chefapp.model.enums.DishType;
+import com.maksy.chefapp.service.DishIngredientService;
 import com.maksy.chefapp.service.DishService;
+import com.maksy.chefapp.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,15 +14,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 @Controller
 public class DishController {
-
-    private final DishService dishService;
+    @Autowired
+    private DishService dishService;
 
     @Autowired
-    public DishController(DishService dishService) {
-        this.dishService = dishService;
-    }
+    private DishIngredientService dishIngredientService;
+    @Autowired
+    private IngredientService ingredientService;
 
     @GetMapping("/dishes")
     public String showAllDishes(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -61,7 +64,8 @@ public class DishController {
 
         if (dishDTO!=null) {
             model.addAttribute("dish", dishDTO);
-            model.addAttribute("formAction", "/dishes/update/{id}");
+            model.addAttribute("actionTitle", "Edit dish");
+            model.addAttribute("formAction", "/dishes/update/{id}(id=${dish.id})");
             model.addAttribute("formTitle", "Edit Dish");
             return "editDish";
         } else {
@@ -71,9 +75,11 @@ public class DishController {
     }
 
     @PostMapping("/dishes/update/{id}")
-    public String saveVoucher( @PathVariable Long id ,@ModelAttribute DishDTO dishDTO, RedirectAttributes redirectAttributes) {
-        dishService.update(id ,dishDTO);
-        redirectAttributes.addFlashAttribute("status", "Changes have been saved successfully!");
+    public String updateDish(@PathVariable("id") long id,
+                             @ModelAttribute("dish") DishDTO dishDTO,
+                             RedirectAttributes redirectAttributes) {
+        dishService.updateDish(id, dishDTO);
+        redirectAttributes.addFlashAttribute("status", "Dish updated successfully!");
         return "redirect:/dishes";
     }
 
@@ -89,6 +95,7 @@ public class DishController {
     public String addDish(Model model, RedirectAttributes redirectAttributes) {
         try {
             model.addAttribute("dish", new Dish());
+            model.addAttribute("actionTitle", "Create dish");
             model.addAttribute("formAction", "/dishes/save");
             model.addAttribute("formTitle", "Create Dish");
         } catch (Exception e) {

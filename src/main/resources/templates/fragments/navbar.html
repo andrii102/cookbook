@@ -13,24 +13,18 @@
         </div>
     </nav>
 
-    <!-- Sidebar for large screens -->
-    <div class="d-none d-lg-block bg-light position-fixed vh-100 p-3" style="width: 250px;">
-        <h5 class="mb-3">Menu</h5>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/dishes}">All Dishes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/dishes/add-dish}">Add Dish</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/ingredients}">Ingredients</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/about}">About Cookbook</a>
-            </li>
-        </ul>
+    <div class="d-none d-lg-block bg-light position-fixed vh-100 sidebar">
+        <div class="sidebar-content">
+            <h5 class="mb-3">Menu</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" th:href="@{/dishes}">All Dishes</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/dishes/add-dish}">Add Dish</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/ingredients}">Ingredients</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/about}">About Cookbook</a></li>
+            </ul>
+        </div>
     </div>
+
 
     <!-- Offcanvas sidebar for small screens -->
     <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">

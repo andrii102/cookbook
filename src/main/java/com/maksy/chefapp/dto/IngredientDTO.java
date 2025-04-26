@@ -7,6 +7,6 @@ import lombok.Data;
 public class IngredientDTO {
     private Long id;
     private String name;
-    private double caloriesPer100g;
+    private Double caloriesPer100g;
     private IngredientCategory category;
 }

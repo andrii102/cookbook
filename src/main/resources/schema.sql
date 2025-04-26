@@ -8,7 +8,7 @@ CREATE TABLE IngredientCategory (
 CREATE TABLE Ingredient (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    calories_per_100g INT NOT NULL,
+    calories_per_100g DOUBLE PRECISION NOT NULL,
     category VARCHAR(255) ,
     FOREIGN KEY (category) REFERENCES IngredientCategory(name)
 );

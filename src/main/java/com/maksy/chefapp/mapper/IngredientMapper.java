@@ -7,9 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")  // Tells MapStruct to generate a Spring Bean
 public interface IngredientMapper {
-
-    IngredientMapper INSTANCE = Mappers.getMapper(IngredientMapper.class);
-
     // Method to map Ingredient to IngredientDTO
     IngredientDTO ingredientToIngredientDTO(Ingredient ingredient);
 

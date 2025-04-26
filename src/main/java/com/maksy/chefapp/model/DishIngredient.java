@@ -22,5 +22,9 @@ public class DishIngredient {
     private Ingredient ingredient;
     private double weight;
 
+    @Override
+    public String toString() {
+        return "Ingredient: " + ingredient.getName() + ", Weight: " + weight + "g";
+    }
 }
 

@@ -11,3 +11,23 @@
     transform: scale(1.02);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+.navbar {
+    z-index: 1050;
+}
+.sidebar {
+    width: 250px;
+    top: 0;
+    z-index: 1030;
+}
+.sidebar-content {
+    padding-top: 70px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.sidebar h5 {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+.sidebar .nav-link {
+    font-size: 0.95rem;
+}

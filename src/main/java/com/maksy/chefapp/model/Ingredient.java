@@ -18,10 +18,10 @@ public class Ingredient {
     private String name;
 
     @Column(name = "calories_per_100g")
-    private double caloriesPer100g;
+    private Double caloriesPer100g;
 
-    @Enumerated(EnumType.STRING)  // Use EnumType.STRING to store the enum value as a string
-    @Column(name = "category")  // This will store the enum value in the 'category' column
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category")
     private IngredientCategory category;
 
     public Ingredient(String name, double caloriesPer100g, IngredientCategory category) {
@@ -36,15 +36,11 @@ public class Ingredient {
         this.category = category;
     }
 
-    public Ingredient() {
-
-    }
+    public Ingredient() {}
 
     public double getCalories(double weight) {
         return caloriesPer100g * weight / 100;
     }
-
-
 
     @Override
     public String toString() {

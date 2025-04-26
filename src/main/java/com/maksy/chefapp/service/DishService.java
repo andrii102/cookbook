@@ -1,10 +1,14 @@
 package com.maksy.chefapp.service;
 
 import com.maksy.chefapp.dto.DishDTO;
+import com.maksy.chefapp.exception.EntityNotFoundException;
+import com.maksy.chefapp.exception.StatusCodes;
 import com.maksy.chefapp.mapper.DishMapper;
 import com.maksy.chefapp.model.Dish;
 import com.maksy.chefapp.model.DishIngredient;
+import com.maksy.chefapp.model.Ingredient;
 import com.maksy.chefapp.model.enums.DishType;
+import com.maksy.chefapp.repository.DishIngredientRepository;
 import com.maksy.chefapp.repository.DishRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -28,6 +32,13 @@ public class DishService {
 
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private DishIngredientRepository dishIngredientRepository;
+    @Autowired
+    private IngredientService ingredientService;
+    @Autowired
+    private DishIngredientService dishIngredientService;
 
     public List<DishDTO> getAllDishes() {
         List<Dish> dishes = dishRepository.findAll();
@@ -79,10 +90,35 @@ public class DishService {
     }
 
 
-    public DishDTO update(Long id, DishDTO dishDTO) {
+    public DishDTO updateDish(Long id, DishDTO dishDTO) {
         Dish dish = dishMapper.dishDTOToDish(dishDTO);
         dish.setId(id);
         dishRepository.save(dish);
         return dishMapper.dishToDishDTO(dish);
     }
+
+//    @Transactional
+//    public void updateDish(Long id, DishDTO dishDTO) {
+//        Dish dish = dishRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Dish not found"));
+//
+//        dish.setName(dishDTO.getName());
+//        dish.setType(dishDTO.getType());
+//        dish.setDescription(dishDTO.getDescription());
+//        dish.setTotalCalories(dishDTO.getTotalCalories());
+//        dish.setTotalWeight(dishDTO.getTotalWeight());
+//        dishRepository.save(dish);
+//
+//        dishIngredientService.deleteByDishId(dish.getId());
+//
+//        // Save new dishIngredients
+//        for (DishIngredient dishIngredientDTO : dishDTO.getDishIngredients()) {
+//            DishIngredient dishIngredient = new DishIngredient();
+//            dishIngredient.setDish(dish); // link to this dish
+//            Ingredient ingredient = ingredientService.findById(dishIngredient.getIngredient().getId());
+//            dishIngredient.setIngredient(ingredient);
+//            dishIngredient.setWeight(dishIngredientDTO.getWeight());
+//            dishIngredientRepository.save(dishIngredient);
+//        }
+//    }
+
 }

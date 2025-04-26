@@ -2,14 +2,81 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Ingredients</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<h2>Ingredients</h2>
+<header>
+    <!-- Navbar fragment -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+</header>
 
-<ul>
-    <li th:each="ingredient : ${ingredients}" th:text="${ingredient}"></li>
-</ul>
+<main>
+    <!-- Main Content -->
+    <div class="container mt-4 content-with-sidebar">
+        <h2>All Ingredients</h2>
 
-<a th:href="@{/chef}">Back to Menu</a>
+        <!-- Filter Form -->
+        <form th:action="@{/ingredients}" method="get" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label for="ingredientCategory" class="form-label">Filter by Ingredient Category:</label>
+                <select id="ingredientCategory" name="ingredientCategory" class="form-select" th:value="${param.ingredientCategory}">
+                    <option value="" th:selected="${param.ingredientCategory == null}">All Categories</option>
+                    <option value="VEGETABLE" th:selected="${param.ingredientCategory == 'VEGETABLE'}">Vegetable</option>
+                    <option value="SPICE" th:selected="${param.ingredientCategory == 'SPICE'}">Spice</option>
+                    <option value="MEAT" th:selected="${param.ingredientCategory == 'MEAT'}">Meat</option>
+                    <option value="DAIRY" th:selected="${param.ingredientCategory == 'DAIRY'}">Dairy</option>
+                </select>
+            </div>
+            <div class="col-md-2 align-self-end">
+                <button type="submit" class="btn btn-primary">Apply</button>
+            </div>
+        </form>
+
+
+        <!-- Display success or error message -->
+        <div th:if="${status != null}" class="alert" th:classappend="${status.contains('success') ? 'alert-success' : 'alert-danger'}">
+            <span th:text="${status}"></span>
+        </div>
+
+        <!-- Ingredient Cards -->
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="ingredient : ${ingredients.content}">
+                <div class="card h-100">
+                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Ingredient Image">
+                    <div class="card-body">
+                        <h4 class="card-title" th:text="${ingredient.name}">Ingredient Name</h4>
+                        <p class="card-text"><strong>Calories per 100g:</strong> <span th:text="${ingredient.caloriesPer100g}">0</span> kcal</p>
+                        <p class="card-text"><strong>Category:</strong> <span th:text="${ingredient.category}">Category</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav th:if="${ingredients.totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${ingredients.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/ingredients(page=${ingredients.number - 1}, ingredientCategory=${param.ingredientCategory})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, ingredients.totalPages - 1)}"
+                    th:classappend="${ingredients.number == i} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/ingredients(page=${i}, ingredientCategory=${param.ingredientCategory})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${ingredients.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/ingredients(page=${ingredients.number + 1}, ingredientCategory=${param.ingredientCategory})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

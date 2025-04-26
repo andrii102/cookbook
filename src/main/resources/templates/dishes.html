@@ -6,73 +6,78 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+<header>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+</header>
 
-<div th:replace="fragments/navbar :: navbar"></div>
+<main>
+    <div class="container mt-4 content-with-sidebar">
+        <h2>All Dishes</h2>
 
-<div class="container mt-4 content-with-sidebar">
-    <h2>All Dishes</h2>
+        <!-- Filter Form -->
+        <form th:action="@{/dishes}" method="get" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label for="dishType" class="form-label">Filter by Dish Type:</label>
+                <select id="dishType" name="dishType" class="form-select" th:value="${param.dishType}">
+                    <option value="" th:selected="${param.dishType == null}">All</option>
+                    <option value="SALAD" th:selected="${param.dishType == 'SALAD'}">SALAD</option>
+                    <option value="MAIN" th:selected="${param.dishType == 'MAIN'}">MAIN</option>
+                    <option value="DESSERT" th:selected="${param.dishType == 'DESSERT'}">DESSERT</option>
+                    <option value="SOUP" th:selected="${param.dishType == 'SOUP'}">SOUP</option>
+                </select>
+            </div>
+            <div class="col-md-2 align-self-end">
+                <button type="submit" class="btn btn-primary">Apply</button>
+            </div>
+        </form>
 
-    <!-- Filter Form -->
-    <form th:action="@{/dishes}" method="get" class="row g-3 mb-4">
-        <div class="col-md-4">
-            <label for="dishType" class="form-label">Filter by Dish Type:</label>
-            <select id="dishType" name="dishType" class="form-select" th:value="${param.dishType}">
-                <option value="" th:selected="${param.dishType == null}">All</option>
-                <option value="SALAD" th:selected="${param.dishType == 'SALAD'}">SALAD</option>
-                <option value="MAIN" th:selected="${param.dishType == 'MAIN'}">MAIN</option>
-                <option value="DESSERT" th:selected="${param.dishType == 'DESSERT'}">DESSERT</option>
-                <option value="SOUP" th:selected="${param.dishType == 'SOUP'}">SOUP</option>
-            </select>
-        </div>
-        <div class="col-md-2 align-self-end">
-            <button type="submit" class="btn btn-primary">Apply</button>
-        </div>
-    </form>
+        <!-- Dish Cards -->
+        <div class="row">
+            <!-- Display success or error message -->
+            <div th:if="${status != null}" class="alert " th:classappend="${status.contains('success') ? 'alert-success' : 'alert-danger'}">
+                <span th:text="${status}"></span>
+            </div>
 
-    <!-- Dish Cards -->
-    <div class="row">
-        <!-- Display success or error message -->
-        <div th:if="${deleteStatus != null}" class="alert " th:classappend="${deleteStatus.contains('success') ? 'alert-success' : 'alert-danger'}">
-            <span th:text="${deleteStatus}"></span>
-        </div>
-
-        <div class="col-md-4 mb-4" th:each="dish : ${dishes.content}">
-            <a th:href="@{'/dishes/'+${dish.id}}"  style="text-decoration: none; color: inherit;">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Dish Image">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${dish.name}">Dish Name</h5>
-                        <p class="card-text" th:text="${dish.description}">Description</p>
-                        <p class="card-text"><strong>Type:</strong> <span th:text="${dish.type}">Type</span></p>
-                        <p class="card-text"><strong>Calories:</strong> <span th:text="${dish.totalCalories}">0</span> kcal</p>
-                        <p class="card-text"><strong>Weight:</strong> <span th:text="${dish.totalWeight}">0</span> g</p>
+            <div class="col-md-4 mb-4" th:each="dish : ${dishes.content}">
+                <a th:href="@{'/dishes/'+${dish.id}}"  style="text-decoration: none; color: inherit;">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300" class="card-img-top" alt="Dish Image">
+                        <div class="card-body">
+                            <h4 class="card-title" th:text="${dish.name}">Dish Name</h4>
+                            <p class="card-text" th:text="${dish.description}">Description</p>
+                            <p class="card-text"><strong>Type:</strong> <span th:text="${dish.type}">Type</span></p>
+                            <p class="card-text"><strong>Calories:</strong> <span th:text="${dish.totalCalories}">0</span> kcal</p>
+                            <p class="card-text"><strong>Weight:</strong> <span th:text="${dish.totalWeight}">0</span> g</p>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
+
+
+        <!-- Pagination -->
+        <nav th:if="${dishes.totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${dishes.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/dishes(page=${dishes.number - 1}, dishType=${param.dishType})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, dishes.totalPages - 1)}"
+                    th:classappend="${dishes.number == i} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/dishes(page=${i}, dishType=${param.dishType})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${dishes.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/dishes(page=${dishes.number + 1}, dishType=${param.dishType})}">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
+</main>
 
-
-    <!-- Pagination -->
-    <nav th:if="${dishes.totalPages > 1}">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${dishes.first} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/dishes(page=${dishes.number - 1}, dishType=${param.dishType})}">Previous</a>
-            </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, dishes.totalPages - 1)}"
-                th:classappend="${dishes.number == i} ? 'active'">
-                <a class="page-link"
-                   th:href="@{/dishes(page=${i}, dishType=${param.dishType})}"
-                   th:text="${i + 1}">1</a>
-            </li>
-            <li class="page-item" th:classappend="${dishes.last} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/dishes(page=${dishes.number + 1}, dishType=${param.dishType})}">Next</a>
-            </li>
-        </ul>
-    </nav>
-</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

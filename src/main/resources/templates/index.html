@@ -8,30 +8,36 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
+<header>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+</header>
 
-<!-- Main Content Area -->
-<div class="container p-4 content-with-sidebar" >
-    <h1>Welcome to the Cookbook!</h1>
-    <p>Explore various recipes and add your own dishes!</p>
+<main>
+    <!-- Main Content Area -->
+    <div class="container p-4 content-with-sidebar" >
+        <h1>Welcome to the Cookbook!</h1>
+        <p>Explore various recipes and add your own dishes!</p>
 
-    <!-- Display dishes from the model -->
-    <div class="row">
-        <div class="col-md-4" th:each="dish : ${dishes}">
-            <a th:href="@{'/dishes/'+${dish.id}}"  style="text-decoration: none; color: inherit;">
-                <div class="card mb-4">
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Dish image">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${dish.name}">Dish Name</h5>
-                        <p class="card-text" th:text="${dish.description}">Description</p>
-                        <p class="card-text"><strong>Calories:</strong> <span th:text="${dish.totalCalories}">500</span> kcal</p>
+        <!-- Display dishes from the model -->
+        <div class="row">
+            <div class="col-md-4" th:each="dish : ${dishes}">
+                <a th:href="@{'/dishes/'+${dish.id}}"  style="text-decoration: none; color: inherit;">
+                    <div class="card mb-4">
+                        <img src="https://via.placeholder.com/300" class="card-img-top" alt="Dish image">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${dish.name}">Dish Name</h5>
+                            <p class="card-text" th:text="${dish.description}">Description</p>
+                            <p class="card-text"><strong>Calories:</strong> <span th:text="${dish.totalCalories}">500</span> kcal</p>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
-    </div>
 
-</div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
