@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Dish</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Edit Dish</h2>
+
+    <!-- Display success or error message -->
+    <div th:if="${status != null}" class="alert" th:classappend="${status.contains('success') ? 'alert-success' : 'alert-danger'}">
+        <span th:text="${status}"></span>
+    </div>
+
+    <!-- Dish Edit Form -->
+    <form th:action="@{/dishes/update/{id}(id=${dish.id})}" method="post" th:object="${dish}">
+        <div class="form-group">
+            <label for="name">Dish Name</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select class="form-control" id="type" th:field="*{type}" required>
+                <option value="" disabled selected>Select a type</option>
+                <option value="SALAD">Salad</option>
+                <option value="SOUP">Soup</option>
+                <option value="MAIN">Main</option>
+                <option value="DESSERT">Dessert</option>
+            </select>
+        </div>
+
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="totalCalories">Total Calories</label>
+            <input type="number" step="0.01" class="form-control" id="totalCalories" th:field="*{totalCalories}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="totalWeight">Total Weight</label>
+            <input type="number" step="0.01" class="form-control" id="totalWeight" th:field="*{totalWeight}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+
+    <a th:href="@{/dishes}" class="btn btn-secondary mt-3">Back to Dishes</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

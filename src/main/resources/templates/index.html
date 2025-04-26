@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cookbook</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<!-- Main Content Area -->
+<div class="container p-4 content-with-sidebar" >
+    <h1>Welcome to the Cookbook!</h1>
+    <p>Explore various recipes and add your own dishes!</p>
+
+    <!-- Display dishes from the model -->
+    <div class="row">
+        <div class="col-md-4" th:each="dish : ${dishes}">
+            <a th:href="@{'/dishes/'+${dish.id}}"  style="text-decoration: none; color: inherit;">
+                <div class="card mb-4">
+                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="Dish image">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${dish.name}">Dish Name</h5>
+                        <p class="card-text" th:text="${dish.description}">Description</p>
+                        <p class="card-text"><strong>Calories:</strong> <span th:text="${dish.totalCalories}">500</span> kcal</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

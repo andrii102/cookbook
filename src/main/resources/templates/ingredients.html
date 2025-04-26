@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ingredients</title>
+</head>
+<body>
+<h2>Ingredients</h2>
+
+<ul>
+    <li th:each="ingredient : ${ingredients}" th:text="${ingredient}"></li>
+</ul>
+
+<a th:href="@{/chef}">Back to Menu</a>
+</body>
+</html>
