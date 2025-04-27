@@ -1,7 +1,5 @@
 package com.maksy.chefapp.service;
 
-import com.maksy.chefapp.dto.DishDTO;
-import com.maksy.chefapp.model.Dish;
 import com.maksy.chefapp.model.DishIngredient;
 import com.maksy.chefapp.model.Ingredient;
 import com.maksy.chefapp.repository.DishIngredientRepository;

@@ -6,9 +6,7 @@ import com.maksy.chefapp.exception.StatusCodes;
 import com.maksy.chefapp.mapper.DishMapper;
 import com.maksy.chefapp.model.Dish;
 import com.maksy.chefapp.model.DishIngredient;
-import com.maksy.chefapp.model.Ingredient;
 import com.maksy.chefapp.model.enums.DishType;
-import com.maksy.chefapp.repository.DishIngredientRepository;
 import com.maksy.chefapp.repository.DishRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -33,21 +31,17 @@ public class DishService {
     @Autowired
     private EntityManager entityManager;
 
-    @Autowired
-    private DishIngredientRepository dishIngredientRepository;
-    @Autowired
-    private IngredientService ingredientService;
-    @Autowired
-    private DishIngredientService dishIngredientService;
 
     public List<DishDTO> getAllDishes() {
         List<Dish> dishes = dishRepository.findAll();
-        System.out.println(dishMapper.dishesToDishDTOs(dishes).toString());
         return dishMapper.dishesToDishDTOs(dishes);
     }
 
     public DishDTO getDishById(Long id) {
         Dish dish = dishRepository.findById(id).orElse(null);
+        if (dish == null) {
+            throw new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Dish does not exist");
+        }
         return dishMapper.dishToDishDTO(dish);
     }
 
@@ -72,20 +66,15 @@ public class DishService {
         Dish dish = entityManager.find(Dish.class, dishId);
 
         if (dish != null) {
-            // Step 1: Remove associated DishIngredient entries
+            //  Remove associated DishIngredient entries
             // Deleting each DishIngredient entry manually
             for (DishIngredient dishIngredient : dish.getDishIngredients()) {
                 entityManager.remove(dishIngredient);  // Remove the DishIngredient record explicitly
             }
-
-            // Step 2: Now delete the Dish itself
-            entityManager.remove(dish);  // Remove the Dish entity
-
-            // Log successful deletion
-            System.out.println("Dish with id " + dishId + " and its ingredients were deleted.");
+            // Now delete the Dish itself
+            entityManager.remove(dish);
         } else {
-            // Handle the case where the Dish doesn't exist
-            System.out.println("Dish with id " + dishId + " does not exist.");
+            throw new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Dish with id " + dishId + " and its ingredients were not found.");
         }
     }
 
@@ -96,29 +85,5 @@ public class DishService {
         dishRepository.save(dish);
         return dishMapper.dishToDishDTO(dish);
     }
-
-//    @Transactional
-//    public void updateDish(Long id, DishDTO dishDTO) {
-//        Dish dish = dishRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Dish not found"));
-//
-//        dish.setName(dishDTO.getName());
-//        dish.setType(dishDTO.getType());
-//        dish.setDescription(dishDTO.getDescription());
-//        dish.setTotalCalories(dishDTO.getTotalCalories());
-//        dish.setTotalWeight(dishDTO.getTotalWeight());
-//        dishRepository.save(dish);
-//
-//        dishIngredientService.deleteByDishId(dish.getId());
-//
-//        // Save new dishIngredients
-//        for (DishIngredient dishIngredientDTO : dishDTO.getDishIngredients()) {
-//            DishIngredient dishIngredient = new DishIngredient();
-//            dishIngredient.setDish(dish); // link to this dish
-//            Ingredient ingredient = ingredientService.findById(dishIngredient.getIngredient().getId());
-//            dishIngredient.setIngredient(ingredient);
-//            dishIngredient.setWeight(dishIngredientDTO.getWeight());
-//            dishIngredientRepository.save(dishIngredient);
-//        }
-//    }
 
 }

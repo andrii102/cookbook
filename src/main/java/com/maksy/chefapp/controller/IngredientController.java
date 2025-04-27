@@ -1,7 +1,6 @@
 package com.maksy.chefapp.controller;
 
 import com.maksy.chefapp.dto.IngredientDTO;
-
 import com.maksy.chefapp.model.enums.IngredientCategory;
 import com.maksy.chefapp.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,8 @@
 package com.maksy.chefapp.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.persistence.*;
 
 
 @Getter

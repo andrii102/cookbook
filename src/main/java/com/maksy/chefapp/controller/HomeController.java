@@ -1,8 +1,7 @@
 package com.maksy.chefapp.controller;
 
 import com.maksy.chefapp.dto.DishDTO;
-import com.maksy.chefapp.model.Dish;
-import com.maksy.chefapp.service.DishService; // Assume you have a service to fetch data
+import com.maksy.chefapp.service.DishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

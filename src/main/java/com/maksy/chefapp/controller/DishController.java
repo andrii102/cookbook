@@ -3,9 +3,7 @@ package com.maksy.chefapp.controller;
 import com.maksy.chefapp.dto.DishDTO;
 import com.maksy.chefapp.model.Dish;
 import com.maksy.chefapp.model.enums.DishType;
-import com.maksy.chefapp.service.DishIngredientService;
 import com.maksy.chefapp.service.DishService;
-import com.maksy.chefapp.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,10 +18,6 @@ public class DishController {
     @Autowired
     private DishService dishService;
 
-    @Autowired
-    private DishIngredientService dishIngredientService;
-    @Autowired
-    private IngredientService ingredientService;
 
     @GetMapping("/dishes")
     public String showAllDishes(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -65,7 +59,7 @@ public class DishController {
         if (dishDTO!=null) {
             model.addAttribute("dish", dishDTO);
             model.addAttribute("actionTitle", "Edit dish");
-            model.addAttribute("formAction", "/dishes/update/{id}(id=${dish.id})");
+            model.addAttribute("formAction", "/dishes/update/" + dishDTO.getId());
             model.addAttribute("formTitle", "Edit Dish");
             return "editDish";
         } else {

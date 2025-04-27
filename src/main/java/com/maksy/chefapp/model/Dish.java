@@ -1,20 +1,12 @@
 package com.maksy.chefapp.model;
 
 import com.maksy.chefapp.model.enums.DishType;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.persistence.*;
-import org.springframework.lang.NonNull;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

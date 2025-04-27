@@ -3,9 +3,8 @@ package com.maksy.chefapp.mapper;
 import com.maksy.chefapp.dto.IngredientDTO;
 import com.maksy.chefapp.model.Ingredient;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")  // Tells MapStruct to generate a Spring Bean
+@Mapper(componentModel = "spring")
 public interface IngredientMapper {
     // Method to map Ingredient to IngredientDTO
     IngredientDTO ingredientToIngredientDTO(Ingredient ingredient);

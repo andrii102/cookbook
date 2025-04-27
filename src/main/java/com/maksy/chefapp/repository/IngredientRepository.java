@@ -1,6 +1,5 @@
 package com.maksy.chefapp.repository;
 
-import com.maksy.chefapp.model.Dish;
 import com.maksy.chefapp.model.Ingredient;
 import com.maksy.chefapp.model.enums.IngredientCategory;
 import org.springframework.data.domain.Page;

@@ -1,11 +1,9 @@
 package com.maksy.chefapp.model;
 
 import com.maksy.chefapp.model.enums.IngredientCategory;
+import jakarta.persistence.*;
 import lombok.Getter;
 
-import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 @Table(name = "Ingredient")
