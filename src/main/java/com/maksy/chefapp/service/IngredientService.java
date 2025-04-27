@@ -24,25 +24,15 @@ public class IngredientService {
     @Autowired
     private IngredientRepository ingredientRepository;
 
-    // Example method to get all ingredients and map them to DTOs
+    //Method to get all ingredients and map them to DTOs
     public List<IngredientDTO> getAllIngredients(List<Ingredient> ingredients) {
         return ingredients.stream()
-                .map(ingredientMapper::ingredientToIngredientDTO)  // Mapping each Ingredient to IngredientDTO
+                .map(ingredientMapper::ingredientToIngredientDTO)
                 .collect(toList());
     }
 
-    // Example method to save ingredient from DTO
-    public Ingredient saveIngredientFromDTO(IngredientDTO ingredientDTO) {
-        return ingredientMapper.ingredientDTOToIngredient(ingredientDTO);
-    }
-
-
     public Ingredient findById(Long ingredientId) {
         return ingredientRepository.findById(ingredientId).orElse(null);
-    }
-
-    public List<Ingredient> findAll() {
-        return ingredientRepository.findAll();
     }
 
     public Page<IngredientDTO> getAllingredientsByCatagory(IngredientCategory ingredientCategory, Pageable pageable) {

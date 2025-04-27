@@ -47,6 +47,7 @@ public class DishService {
 
     public Page<DishDTO> getAllDishesFiltered(DishType dishType, Pageable pageable) {
         Page<Dish> dishesPage = dishRepository.findFilteredDishes(dishType, pageable);
+
         List<DishDTO> dishesDTO = dishesPage.getContent().stream()
                 .map(dishMapper::dishToDishDTO)
                 .toList();
