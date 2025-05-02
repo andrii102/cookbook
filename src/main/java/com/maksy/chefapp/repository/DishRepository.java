@@ -19,4 +19,6 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
 
     @Query("SELECT d FROM Dish d WHERE (:dishtype IS NULL OR d.type = :dishtype) ")
     Page<Dish> findFilteredDishes(@Param("dishtype") DishType dishType, Pageable pageable);
+
+    List<Dish> findTop3ByOrderByIdDesc();
 }

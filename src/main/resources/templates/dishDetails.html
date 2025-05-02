@@ -8,50 +8,56 @@
 <body>
 
 <header>
-    <!-- Navbar Fragment -->
     <div th:replace="~{fragments/navbar :: navbar}"></div>
-
 </header>
 
 <main>
     <div class="container mt-5 mb-5 content-with-sidebar">
-        <div class="card">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <!--                <img th:src="${dish.imageUrl}" class="img-fluid rounded-start" alt="Dish Image"-->
-                    <!--                     onerror="this.src='https://via.placeholder.com/300';" />-->
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h3 class="card-title" th:text="${dish.name}">Dish Name</h3>
-                        <p class="card-text"><strong>Type:</strong> <span th:text="${dish.type}">SALAD</span></p>
-                        <p class="card-text"><strong>Description:</strong> <span th:text="${dish.description}">Description</span></p>
-                        <p class="card-text"><strong>Total Weight:</strong> <span th:text="${dish.totalWeight}">0.0</span> g</p>
-                        <p class="card-text"><strong>Total Calories:</strong> <span th:text="${dish.totalCalories}">0.0</span> kcal</p>
+        <div class="row g-0 align-items-start">
+            <div class="col-md-4">
+                <img th:src="@{'https://images.unsplash.com/photo-1561651823-34feb02250e4?q=80&w=2654&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}"
+                     class="img-fluid rounded" alt="Dish Image"/>
+            </div>
+            <div class="col-md-8 ps-md-4">
+                <h3 th:text="${dish.name}">Dish Name</h3>
+                <p><strong>Type:</strong> <span th:text="${dish.type}">SALAD</span></p>
+                <p><strong>Description:</strong> <span th:text="${dish.description}">Description</span></p>
+                <p><strong>Total Weight:</strong> <span th:text="${dish.totalWeight}">0.0</span> g</p>
+                <p><strong>Total Calories:</strong> <span th:text="${dish.totalCalories}">0.0</span> kcal</p>
 
-                        <!-- Actions -->
-                        <div class="mt-4 d-flex gap-2">
-                            <a th:href="@{'/dishes/edit/' + ${dish.id}}" class="btn btn-warning">Edit</a>
+                <h5 class="mt-4">Ingredients</h5>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Ingredient Name</th>
+                        <th>Weight (g)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="di : ${dishIngredients}">
+                        <td th:text="${di.ingredientName}">Ingredient</td>
+                        <td th:text="${di.weight}">0.0</td>
+                    </tr>
+                    </tbody>
+                </table>
 
-                            <form th:action="@{'/dishes/delete/' + ${dish.id}}" method="get" th:object="${dish}"
-                                  onsubmit="return confirm('Are you sure you want to delete this dish?');">
-                                <input type="hidden" name="_method" value="delete"/>
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-
-                            <a th:href="@{/dishes}" class="btn btn-secondary">Back to List</a>
-                        </div>
-                    </div>
+                <!-- Actions -->
+                <div class="mt-4 d-flex gap-2">
+                    <a th:href="@{'/dishes/edit/' + ${dish.id}}" class="btn btn-warning">Edit</a>
+                    <form th:action="@{'/dishes/delete/' + ${dish.id}}" method="get"
+                          onsubmit="return confirm('Are you sure you want to delete this dish?');">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <a th:href="@{/dishes}" class="btn btn-secondary">Back to List</a>
                 </div>
             </div>
         </div>
     </div>
 </main>
 
-
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

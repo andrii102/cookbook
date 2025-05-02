@@ -17,7 +17,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<DishDTO> dishes = dishService.getAllDishes();
+        List<DishDTO> dishes = dishService.get3Dishes();
         model.addAttribute("dishes", dishes);
         return "index";
     }

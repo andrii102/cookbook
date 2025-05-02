@@ -175,4 +175,10 @@ public class DishService {
 
     }
 
+    public List<DishDTO> get3Dishes() {
+        List<Dish> dishes = dishRepository.findTop3ByOrderByIdDesc();
+        return dishes.stream()
+                .map(dish -> dishMapper.dishToDishDTO(dish))
+                .collect(Collectors.toList());
+    }
 }

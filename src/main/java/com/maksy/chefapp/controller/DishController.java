@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 
 @Controller
+@RequestMapping("/dishes")
 public class DishController {
     @Autowired
     private DishService dishService;
@@ -33,7 +34,7 @@ public class DishController {
     private IngredientService ingredientService;
 
 
-    @GetMapping("/dishes")
+    @GetMapping
     public String showAllDishes(@RequestParam(value = "page", defaultValue = "0") int page,
                                 @RequestParam(required = false) DishType dishType,
                                 Model model) {
@@ -43,11 +44,13 @@ public class DishController {
     }
 
     // Display a specific dish by ID
-    @GetMapping("/dishes/{id}")
+    @GetMapping("/{id}")
     public String showDishById(@PathVariable("id") long id, Model model) {
         DishDTO dishDTO = dishService.getDishById(id);
         if (dishDTO != null) {
+            List<DishIngredientDTO> dishIngredients = dishIngredientService.findAllByDishId(dishDTO.getId());
             model.addAttribute("dish", dishDTO);
+            model.addAttribute("dishIngredients", dishIngredients);
             return "dishDetails"; // Render the dishDetails.html template
         } else {
             model.addAttribute("error", "Dish not found");
@@ -55,7 +58,7 @@ public class DishController {
         }
     }
 
-    @GetMapping("/dishes/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteDishById(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes) {
         try {
             dishService.deleteDish(id);
@@ -66,7 +69,7 @@ public class DishController {
         return "redirect:/dishes";
     }
 
-    @GetMapping("/dishes/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String editDishById(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes) {
         DishDTO dishDTO = dishService.getDishById(id);
 
@@ -86,7 +89,7 @@ public class DishController {
         }
     }
 
-    @PostMapping("/dishes/update/{id}")
+    @PostMapping("/update/{id}")
     public String updateDish(@PathVariable("id") long id,
                              @ModelAttribute("dishDTO") DishDTO dishDTO,
                              @RequestParam(value = "deleteIngredientIds", required = false) List<Long> deleteIngredientIds,
@@ -97,7 +100,7 @@ public class DishController {
         return "redirect:/dishes";
     }
 
-    @PostMapping("dishes/save")
+    @PostMapping("/save")
     public String saveDish(@ModelAttribute("dishDTO") DishDTO dishDTO, RedirectAttributes redirectAttributes) {
         dishService.createDish(dishDTO);
         redirectAttributes.addFlashAttribute("status", "Dish saved successfully!");
@@ -105,7 +108,7 @@ public class DishController {
     }
 
 
-    @GetMapping("dishes/add-dish")
+    @GetMapping("/create-dish")
     public String addDish(Model model, RedirectAttributes redirectAttributes) {
         try {
             model.addAttribute("dish", new Dish());
