@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -14,19 +15,20 @@ public class DishDTO {
     private String name;
     private DishType type;
     private String description;
-    private List<DishIngredient> dishIngredients;
+    private List<DishIngredientDTO> dishIngredients;
     private double totalWeight;
     private double totalCalories;
 
     @Override
     public String toString() {
-        return "DishDTO{" +
+        return "Dish{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", type=" + type +
-                ", description='" + description + '\'' +
-                ", totalWeight=" + totalWeight +
+                ", name='" + Objects.toString(name, "null") + '\'' +
+                ", type=" + Objects.toString(type, "null") +
+                ", description='" + Objects.toString(description, "null") + '\'' +
                 ", totalCalories=" + totalCalories +
+                ", totalWeight=" + totalWeight +
+                ", dishIngredients=" + (dishIngredients != null ? dishIngredients : "[]") +
                 '}';
     }
 }

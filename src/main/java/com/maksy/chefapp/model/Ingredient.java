@@ -3,11 +3,13 @@ package com.maksy.chefapp.model;
 import com.maksy.chefapp.model.enums.IngredientCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
 @Table(name = "Ingredient")
 @Getter
+@Setter
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +44,11 @@ public class Ingredient {
 
     @Override
     public String toString() {
-        return String.format("%-15s | Калорійність: %6.2f ккал на 100 г", name, caloriesPer100g);
+        return "Ingredient{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", caloriesPer100g=" + caloriesPer100g +
+                ", category=" + category +
+                '}';
     }
 }

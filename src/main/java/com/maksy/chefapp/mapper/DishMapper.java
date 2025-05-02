@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DishIngredientMapper.class})
 public interface DishMapper {
 
     DishDTO dishToDishDTO(Dish dish);

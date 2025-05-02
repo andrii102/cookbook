@@ -1,12 +1,14 @@
 package com.maksy.chefapp.service;
 
 import com.maksy.chefapp.dto.DishDTO;
+import com.maksy.chefapp.dto.DishIngredientDTO;
 import com.maksy.chefapp.exception.EntityNotFoundException;
 import com.maksy.chefapp.exception.StatusCodes;
 import com.maksy.chefapp.mapper.DishMapper;
 import com.maksy.chefapp.model.Dish;
 import com.maksy.chefapp.model.DishIngredient;
 import com.maksy.chefapp.model.enums.DishType;
+import com.maksy.chefapp.repository.DishIngredientRepository;
 import com.maksy.chefapp.repository.DishRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,6 +33,9 @@ public class DishService {
 
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private DishIngredientRepository dishIngredientRepository;
 
 
     public List<DishDTO> getAllDishes() {
@@ -79,10 +85,27 @@ public class DishService {
         }
     }
 
-
-    public DishDTO updateDish(Long id, DishDTO dishDTO) {
+    @Transactional
+    public DishDTO updateDish(Long id, DishDTO dishDTO, List<Long> deleteIngredientIds) {
         Dish dish = dishMapper.dishDTOToDish(dishDTO);
         dish.setId(id);
+
+        if (deleteIngredientIds != null) {
+            dish.removeIngredients(deleteIngredientIds);
+        }
+
+        List<DishIngredient> dishIngredients = dish.getDishIngredients();
+        if (dishIngredients != null) {
+            List<DishIngredient> newDishIngredients = new ArrayList<>();
+            for (DishIngredient di : dish.getDishIngredients()) {
+                if(di.getId() == null){     // Check for new ingredients
+                    newDishIngredients.add(new DishIngredient(dish.getId(), di.getIngredientId(), di.getWeight()));
+                }else {
+                    newDishIngredients.add(di);
+                }            }
+            dish.setDishIngredients(newDishIngredients);
+        }
+
         dishRepository.save(dish);
         return dishMapper.dishToDishDTO(dish);
     }

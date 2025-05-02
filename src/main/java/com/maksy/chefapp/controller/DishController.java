@@ -1,22 +1,35 @@
 package com.maksy.chefapp.controller;
 
 import com.maksy.chefapp.dto.DishDTO;
+import com.maksy.chefapp.dto.DishIngredientDTO;
+import com.maksy.chefapp.dto.IngredientDTO;
 import com.maksy.chefapp.model.Dish;
+import com.maksy.chefapp.model.DishIngredient;
 import com.maksy.chefapp.model.enums.DishType;
+import com.maksy.chefapp.service.DishIngredientService;
 import com.maksy.chefapp.service.DishService;
+import com.maksy.chefapp.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
 public class DishController {
     @Autowired
     private DishService dishService;
+    @Autowired
+    private DishIngredientService dishIngredientService;
+    @Autowired
+    private IngredientService ingredientService;
 
 
     @GetMapping("/dishes")
@@ -57,7 +70,11 @@ public class DishController {
         DishDTO dishDTO = dishService.getDishById(id);
 
         if (dishDTO!=null) {
+            List<DishIngredientDTO>dishIngredientDTOS =  dishIngredientService.findAllByDishId(id);
+            List<IngredientDTO> allIngredients = ingredientService.getAllIngredients();
             model.addAttribute("dish", dishDTO);
+            model.addAttribute("dishIngredients", dishIngredientDTOS);
+            model.addAttribute("allIngredients", allIngredients);
             model.addAttribute("actionTitle", "Edit dish");
             model.addAttribute("formAction", "/dishes/update/" + dishDTO.getId());
             model.addAttribute("formTitle", "Edit Dish");
@@ -70,9 +87,11 @@ public class DishController {
 
     @PostMapping("/dishes/update/{id}")
     public String updateDish(@PathVariable("id") long id,
-                             @ModelAttribute("dish") DishDTO dishDTO,
+                             @ModelAttribute("dishDTO") DishDTO dishDTO,
+                             @RequestParam(value = "deleteIngredientIds", required = false) List<Long> deleteIngredientIds,
                              RedirectAttributes redirectAttributes) {
-        dishService.updateDish(id, dishDTO);
+
+        dishService.updateDish(id, dishDTO, deleteIngredientIds);
         redirectAttributes.addFlashAttribute("status", "Dish updated successfully!");
         return "redirect:/dishes";
     }

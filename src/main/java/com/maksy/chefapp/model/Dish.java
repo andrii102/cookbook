@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Dish")
@@ -34,7 +34,7 @@ public class Dish {
     private double totalWeight;
 
 
-    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dishId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DishIngredient> dishIngredients;
 
     private static final Logger logger = LoggerFactory.getLogger(Dish.class);
@@ -49,39 +49,27 @@ public class Dish {
 
     }
 
-    public void addIngredient(Ingredient ingredient, double weight) {
-        DishIngredient dishIngredient = new DishIngredient();
-        dishIngredient.setDish(this);
-        dishIngredient.setIngredient(ingredient);
-        dishIngredient.setWeight(weight);
 
-        this.dishIngredients.add(dishIngredient);
+    public void removeIngredients(List<Long> ingredientIds) {
+        System.out.println("REMOVING INGREDIENTS, ARGUMENTS:"+ingredientIds);
+        System.out.println("Before removing dishIngredients size: " +  dishIngredients.size());
+        this.dishIngredients.removeIf(d -> ingredientIds.contains(d.getId()));
+        System.out.println("After removing dishIngredients size: " +  dishIngredients.size());;
     }
 
-    public void removeIngredient(Ingredient ingredient) {
-        this.dishIngredients.removeIf(d -> d.getIngredient().equals(ingredient));
-    }
-
-    // Method to delete Dish and its associated DishIngredient records
-    public void deleteDishWithIngredients(EntityManager entityManager) {
-        // First, we remove all DishIngredient records
-        for (DishIngredient dishIngredient : dishIngredients) {
-            entityManager.remove(dishIngredient);  // Removing the DishIngredient explicitly
-        }
-        // Now, we remove the Dish itself
-        entityManager.remove(this);  // Removing the Dish
-    }
+    public void addIngredients(List<Long> ingredientIds) {}
 
     @Override
     public String toString() {
-        // Build a string representation of the dish, including ingredient details
-        String ingredientDetails = dishIngredients.stream()
-                .map(entry -> entry.getIngredient().getName() + " " + entry.getWeight() + " г")
-                .collect(Collectors.joining(", "));
-
-        // Return a formatted string with the dish details
-        return String.format("%-15s | Тип: %-10s | Загальна вага: %5.2f г | Загальна калорійність: %8.2f ккал (%s)",
-                name, type, totalWeight, totalCalories, ingredientDetails);
+        return "Dish{" +
+                "id=" + id +
+                ", name='" + Objects.toString(name, "null") + '\'' +
+                ", type=" + Objects.toString(type, "null") +
+                ", description='" + Objects.toString(description, "null") + '\'' +
+                ", totalCalories=" + totalCalories +
+                ", totalWeight=" + totalWeight +
+                ", dishIngredients=" + (dishIngredients != null ? dishIngredients : "[]") +
+                '}';
     }
 
 }

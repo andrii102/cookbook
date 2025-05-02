@@ -25,7 +25,8 @@ public class IngredientService {
     private IngredientRepository ingredientRepository;
 
     //Method to get all ingredients and map them to DTOs
-    public List<IngredientDTO> getAllIngredients(List<Ingredient> ingredients) {
+    public List<IngredientDTO> getAllIngredients() {
+        List<Ingredient> ingredients = ingredientRepository.findAll();
         return ingredients.stream()
                 .map(ingredientMapper::ingredientToIngredientDTO)
                 .collect(toList());
@@ -33,6 +34,13 @@ public class IngredientService {
 
     public Ingredient findById(Long ingredientId) {
         return ingredientRepository.findById(ingredientId).orElse(null);
+    }
+
+    public List<IngredientDTO> findAllById(List<Long>  ingredientIds) {
+        List<Ingredient> ingredients = ingredientRepository.findAllById(ingredientIds);
+        return ingredients.stream()
+                .map(ingredientMapper::ingredientToIngredientDTO)
+                .toList();
     }
 
     public Page<IngredientDTO> getAllingredientsByCatagory(IngredientCategory ingredientCategory, Pageable pageable) {

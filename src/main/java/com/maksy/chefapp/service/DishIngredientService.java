@@ -1,15 +1,17 @@
 package com.maksy.chefapp.service;
 
+import com.maksy.chefapp.dto.DishIngredientDTO;
+import com.maksy.chefapp.mapper.DishIngredientMapper;
 import com.maksy.chefapp.model.DishIngredient;
 import com.maksy.chefapp.model.Ingredient;
 import com.maksy.chefapp.repository.DishIngredientRepository;
-import com.maksy.chefapp.repository.DishRepository;
+import com.maksy.chefapp.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class DishIngredientService {
@@ -17,59 +19,31 @@ public class DishIngredientService {
     private DishIngredientRepository dishIngredientRepository;
 
     @Autowired
-    private IngredientService ingredientService;
-
+    private DishIngredientMapper dishIngredientMapper;
     @Autowired
-    private DishRepository dishRepository;
+    private IngredientRepository ingredientRepository;
 
-    public List<DishIngredient> findAllByDishId(Long dishId){
-        return dishIngredientRepository.findAllByDishId(dishId);
-    }
+    public List<DishIngredientDTO> findAllByDishId(Long dishId){
+        List<DishIngredient> dishIngredients = dishIngredientRepository.findAllByDishId(dishId);
+        List<DishIngredientDTO> dishIngredientDTOS = new ArrayList<>();
 
-    public  List<DishIngredient> findAll(){
-        return dishIngredientRepository.findAll();
-    }
+        for(DishIngredient dishIngredient : dishIngredients){
+           DishIngredientDTO dishIngredientDTO = dishIngredientMapper.toDishIngredientDTO(dishIngredient);
 
-    public List<DishIngredient> extractDishIngredientsFromParams(Map<String, String> params, Long dish) {
-        List<DishIngredient> dishIngredients = new ArrayList<>();
-
-        int index = 0;
-        while (true) {
-            String ingredientIdStr = params.get("dishIngredients[" + index + "].ingredientId");
-            String weightStr = params.get("dishIngredients[" + index + "].weight");
-
-            if (ingredientIdStr == null || weightStr == null) {
-                break;
-            }
-
-            Long ingredientId = Long.parseLong(ingredientIdStr);
-            double weight = Double.parseDouble(weightStr);
-
-            // Fetch the Ingredient entity by ID
-            Ingredient ingredient = ingredientService.findById(ingredientId);
-            if (ingredient == null) {
-                index++;
-                continue; // or throw exception if you prefer
-            }
-
-            DishIngredient dishIngredient = new DishIngredient();
-
-            dishIngredient.setDish(dishRepository.findById(dish).orElse(null)); // set full Dish object
-            dishIngredient.setIngredient(ingredient); // set full Ingredient object
-            dishIngredient.setWeight(weight);
-
-            dishIngredients.add(dishIngredient);
-
-            index++;
+           Ingredient ingredient = ingredientRepository.findById(dishIngredient.getIngredientId()).orElse(null);
+           if (ingredient!=null){
+               dishIngredientDTO.setIngredientName(ingredient.getName());
+           }
+           dishIngredientDTOS.add(dishIngredientDTO);
         }
 
-        return dishIngredients;
+        return dishIngredientDTOS;
     }
 
-    public void updateDishIngredients(Long id, List<DishIngredient> dishIngredients) {
+    public  List<DishIngredientDTO> findAll(){
+        return dishIngredientRepository.findAll().stream()
+                .map(dishIngredientMapper::toDishIngredientDTO)
+                .toList();
     }
 
-    public void deleteByDishId(Long id) {
-        dishIngredientRepository.deleteById(id);
-    }
 }
