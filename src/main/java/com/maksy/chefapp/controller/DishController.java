@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -108,6 +109,8 @@ public class DishController {
     public String addDish(Model model, RedirectAttributes redirectAttributes) {
         try {
             model.addAttribute("dish", new Dish());
+            model.addAttribute("dishIngredients", new ArrayList<>());
+            model.addAttribute("allIngredients", ingredientService.getAllIngredients());
             model.addAttribute("actionTitle", "Create dish");
             model.addAttribute("formAction", "/dishes/save");
             model.addAttribute("formTitle", "Create Dish");

@@ -55,12 +55,16 @@
 
             <!-- Dish Ingredients -->
 
+            <!-- Dish Ingredients Section -->
             <div class="ingredients-section">
                 <h3>Ingredients</h3>
+
+                <!-- If no ingredients are present -->
                 <div th:if="${#lists.isEmpty(dishIngredients)}">
                     <p>No ingredients added yet</p>
                 </div>
 
+                <!-- Ingredients table if there are any -->
                 <table class="table" th:unless="${#lists.isEmpty(dishIngredients)}">
                     <thead>
                     <tr>
@@ -70,10 +74,11 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <!-- Iterate over existing dish ingredients -->
                     <tr th:each="di, iterStat : ${dishIngredients}">
                         <td th:text="${di.ingredientName}"></td>
                         <td>
-                            <input type="number" step="0.01"
+                            <input type="number" min="0" step="0.01"
                                    th:value="${di.weight}"
                                    th:name="${'dishIngredients[' + iterStat.index + '].weight'}"
                                    class="form-control"/>
@@ -88,14 +93,12 @@
                             <input type="hidden" th:value="${di.ingredientName}"
                                    th:name="${'dishIngredients[' + iterStat.index + '].ingredientName'}"/>
 
-                            <!-- Updated Button -->
                             <button type="button" class="btn btn-danger btn-sm delete-ingredient-btn"
                                     th:data-ingredient-id="${di.id}">
                                 Delete
                             </button>
                         </td>
                     </tr>
-
                     </tbody>
                 </table>
 
@@ -107,15 +110,15 @@
                     <button type="button" class="btn btn-secondary mt-3" onclick="addNewIngredient()">Add Another Ingredient</button>
                 </div>
 
+                <!-- Hidden Template for Ingredient Options -->
                 <select id="ingredientOptions" hidden>
                     <option value="">Select Ingredient</option>
                     <option th:each="ingr : ${allIngredients}"
-                            th:value="${ingr.id}"
-                            th:text="${ingr.name}"></option>
+                            th:value="${ingr.id}" th:text="${ingr.name}"></option>
                 </select>
-            </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+            </div>
         </form>
 
         <a th:href="@{/dishes}" class="btn btn-secondary mt-3">Back to Dishes</a>
@@ -127,7 +130,7 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script>
+<script th:inline="javascript">
     document.querySelectorAll('.delete-ingredient-btn').forEach(button => {
         button.addEventListener('click', function () {
             const row = this.closest('tr');
@@ -140,8 +143,9 @@
         });
     });
 
-    let newIngredientIndex = 0;
+    let newIngredientIndex = /*[[${dishIngredients.size()}]]*/ 0;   // Start from the size of existing ingredients
 
+    // Add a new ingredient to the form
     function addNewIngredient() {
         const container = document.getElementById('newIngredientsContainer');
         const ingredientOptions = document.getElementById('ingredientOptions').innerHTML;
@@ -156,7 +160,7 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <input type="number" step="0.01" name="dishIngredients[${newIngredientIndex}].weight"
+                <input type="number" step="0.01" min="0" name="dishIngredients[${newIngredientIndex}].weight"
                        placeholder="Weight (g)" class="form-control"/>
             </div>
             <div class="col-md-2">
@@ -165,7 +169,7 @@
         `;
 
         container.appendChild(row);
-        newIngredientIndex++;
+        newIngredientIndex++; // Increment index for the next ingredient
     }
 </script>
 

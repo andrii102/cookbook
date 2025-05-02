@@ -63,9 +63,31 @@ public class DishService {
 
     public DishDTO createDish(DishDTO dishDTO) {
         Dish dish = dishMapper.dishDTOToDish(dishDTO);
-        dishRepository.save(dish);
-        return dishMapper.dishToDishDTO(dish);
+
+        // Temporarily remove ingredients before saving
+        List<DishIngredient> dishIngredients = dish.getDishIngredients();
+        dish.setDishIngredients(null);
+
+        // First save the dish to generate ID
+        Dish savedDish = dishRepository.save(dish);
+
+        // Assign dishId to each DishIngredient
+        if (dishIngredients != null) {
+            List<DishIngredient> newDishIngredients = new ArrayList<>();
+            for (DishIngredient di : dishIngredients) {
+                if (di.getId() == null) {
+                    di.setDishId(savedDish.getId());
+                }
+                newDishIngredients.add(di);
+            }
+
+            savedDish.setDishIngredients(newDishIngredients);
+            dishRepository.save(savedDish); // Save again with ingredients
+        }
+
+        return dishMapper.dishToDishDTO(savedDish);
     }
+
 
     @Transactional
     public void deleteDish(Long dishId) {
