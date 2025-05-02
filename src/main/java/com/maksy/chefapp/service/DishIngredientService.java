@@ -30,11 +30,9 @@ public class DishIngredientService {
         for(DishIngredient dishIngredient : dishIngredients){
            DishIngredientDTO dishIngredientDTO = dishIngredientMapper.toDishIngredientDTO(dishIngredient);
 
-           Ingredient ingredient = ingredientRepository.findById(dishIngredient.getIngredientId()).orElse(null);
-           if (ingredient!=null){
-               dishIngredientDTO.setIngredientName(ingredient.getName());
-           }
-           dishIngredientDTOS.add(dishIngredientDTO);
+            ingredientRepository.findById(dishIngredient.getIngredientId()).ifPresent(ingredient ->
+                    dishIngredientDTO.setIngredientName(ingredient.getName()));
+            dishIngredientDTOS.add(dishIngredientDTO);
         }
 
         return dishIngredientDTOS;

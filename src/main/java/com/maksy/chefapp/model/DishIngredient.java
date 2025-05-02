@@ -1,11 +1,8 @@
 package com.maksy.chefapp.model;
 
-import com.maksy.chefapp.dto.IngredientDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Objects;
 
 @Entity
 @Getter

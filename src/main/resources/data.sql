@@ -23,8 +23,8 @@ VALUES
 
 INSERT INTO Dish (name, type, description, total_calories, total_weight)
 VALUES
-    ('Greek Salad', 'SALAD', 'A refreshing mix of tomatoes, cucumbers, olives, feta cheese, and olive oil.', 200, 250),
-    ('Chicken Soup', 'SOUP', 'A warm, hearty soup with chicken fillet, spices, and vegetables.', 150, 300),
+    ('Greek Salad', 'SALAD', 'A refreshing mix of tomatoes, cucumbers, olives, feta cheese, and olive oil.', 291.6, 220),
+    ('Chicken Soup', 'SOUP', 'A warm, hearty soup with chicken fillet, spices, and vegetables.', 165.8, 158),
     ('Spaghetti Carbonara', 'MAIN', 'Pasta with a creamy sauce made from eggs, cheese, pancetta, and pepper.', 600, 350),
     ('Minestrone Soup', 'SOUP', 'A rich vegetable soup with beans, pasta, and tomatoes.', 180, 400),
     ('Caesar Salad', 'SALAD', 'A classic salad with romaine lettuce, croutons, parmesan, and Caesar dressing.', 240, 220),

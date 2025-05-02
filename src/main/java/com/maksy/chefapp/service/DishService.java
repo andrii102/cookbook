@@ -2,6 +2,7 @@ package com.maksy.chefapp.service;
 
 import com.maksy.chefapp.dto.DishDTO;
 import com.maksy.chefapp.dto.DishIngredientDTO;
+import com.maksy.chefapp.dto.IngredientDTO;
 import com.maksy.chefapp.exception.EntityNotFoundException;
 import com.maksy.chefapp.exception.StatusCodes;
 import com.maksy.chefapp.mapper.DishMapper;
@@ -20,6 +21,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -36,6 +40,10 @@ public class DishService {
 
     @Autowired
     private DishIngredientRepository dishIngredientRepository;
+    @Autowired
+    private DishIngredientService dishIngredientService;
+    @Autowired
+    private IngredientService ingredientService;
 
 
     public List<DishDTO> getAllDishes() {
@@ -82,7 +90,10 @@ public class DishService {
             }
 
             savedDish.setDishIngredients(newDishIngredients);
+
             dishRepository.save(savedDish); // Save again with ingredients
+
+            updateCaloriesWeight(savedDish);
         }
 
         return dishMapper.dishToDishDTO(savedDish);
@@ -129,7 +140,39 @@ public class DishService {
         }
 
         dishRepository.save(dish);
+        updateCaloriesWeight(dish);
+
         return dishMapper.dishToDishDTO(dish);
+    }
+
+    private void updateCaloriesWeight(Dish dish) {
+        List<DishIngredientDTO> dishIngredients = dishIngredientService.findAllByDishId(dish.getId());
+        List<IngredientDTO> ingredientDTOS = ingredientService.findAllById(dishIngredients.stream()
+                .map(DishIngredientDTO::getIngredientId)
+                .collect(Collectors.toList())
+        );
+
+        Map<Long, IngredientDTO> ingredientMap = ingredientDTOS.stream()
+                .collect(Collectors.toMap(IngredientDTO::getId, Function.identity()));
+
+        double dishCalories = 0;
+        double dishWeight = 0;
+
+        for (DishIngredientDTO dishIngredient : dishIngredients) {
+            IngredientDTO ingredientDTO = ingredientMap.get(dishIngredient.getIngredientId());
+            if(ingredientDTO != null){
+                double weight = dishIngredient.getWeight();
+                double caloriesPer100g = ingredientDTO.getCaloriesPer100g();
+
+                dishWeight += weight;
+                dishCalories += (caloriesPer100g / 100) * weight;
+            }
+        }
+
+        dish.setTotalWeight(dishWeight);
+        dish.setTotalCalories(dishCalories);
+        dishRepository.save(dish);
+
     }
 
 }

@@ -4,8 +4,6 @@ import com.maksy.chefapp.model.enums.DishType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,37 +25,23 @@ public class Dish {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "total_calories")  // Store the total calories in the DB
+    @Column(name = "total_calories")
     private double totalCalories;
 
-    @Column(name = "total_weight")  // Store the total weight in the DB
+    @Column(name = "total_weight")
     private double totalWeight;
-
 
     @OneToMany(mappedBy = "dishId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DishIngredient> dishIngredients;
-
-    private static final Logger logger = LoggerFactory.getLogger(Dish.class);
-
-    public Dish(String name, DishType type) {
-        this.name = name;
-        this.type = type;
-        logger.info("Блюдо '{}' типу '{}' створено", name, type);
-    }
 
     public Dish() {
 
     }
 
-
     public void removeIngredients(List<Long> ingredientIds) {
-        System.out.println("REMOVING INGREDIENTS, ARGUMENTS:"+ingredientIds);
-        System.out.println("Before removing dishIngredients size: " +  dishIngredients.size());
         this.dishIngredients.removeIf(d -> ingredientIds.contains(d.getId()));
-        System.out.println("After removing dishIngredients size: " +  dishIngredients.size());;
     }
 
-    public void addIngredients(List<Long> ingredientIds) {}
 
     @Override
     public String toString() {
