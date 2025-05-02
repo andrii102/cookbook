@@ -1,15 +1,20 @@
 package com.maksy.chefapp.aspect;
 
+import com.maksy.chefapp.service.EmailService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
 public class LoggingAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+
+    @Autowired
+    private EmailService emailService;
 
     @Pointcut("execution(* com.maksy.chefapp.service..*(..)) || execution(* com.maksy.chefapp.repository..*(..))")
     public void serviceAndRepositoryPointCut() {}
@@ -36,5 +41,10 @@ public class LoggingAspect {
                 joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName(),
                 exception.getMessage(), exception);
+
+        // Send email notification
+        String subject = "Error in Application: " + joinPoint.getSignature().getName();
+        String message = "Error details:\n" + exception.getMessage();
+        emailService.sendErrorNotification(subject, message);
     }
 }
