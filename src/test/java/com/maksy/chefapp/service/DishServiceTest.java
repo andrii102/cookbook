@@ -1,6 +1,8 @@
 package com.maksy.chefapp.service;
 
 import com.maksy.chefapp.dto.DishDTO;
+import com.maksy.chefapp.dto.DishIngredientDTO;
+import com.maksy.chefapp.dto.IngredientDTO;
 import com.maksy.chefapp.exception.EntityNotFoundException;
 import com.maksy.chefapp.mapper.DishMapper;
 import com.maksy.chefapp.model.Dish;
@@ -29,6 +31,12 @@ class DishServiceTest {
 
     @Mock
     private DishMapper dishMapper;
+
+    @Mock
+    private DishIngredientService dishIngredientService;
+
+    @Mock
+    private IngredientService ingredientService;
 
     @Mock
     private EntityManager entityManager;
@@ -124,18 +132,47 @@ class DishServiceTest {
         assertThrows(EntityNotFoundException.class, () -> dishService.deleteDish(1L));
     }
 
-//    @Test
-//    void updateDish_ShouldSaveUpdatedDish() {
-//        DishDTO dishDTO = new DishDTO();
-//        Dish dish = new Dish();
-//        when(dishMapper.dishDTOToDish(dishDTO)).thenReturn(dish);
-//        when(dishRepository.save(dish)).thenReturn(dish);
-//        when(dishMapper.dishToDishDTO(dish)).thenReturn(dishDTO);
-//
-//        DishDTO result = dishService.updateDish(1L, dishDTO, deleteIngredientIds);
-//
-//        assertEquals(dishDTO, result);
-//        verify(dishRepository).save(dish);
-//        assertEquals(1L, dish.getId());
-//    }
+    @Test
+     void updateDish_ShouldUpdateDishAndRecalculateCalories() {
+        // Arrange
+        Long dishId = 1L;
+        DishDTO dishDTO = new DishDTO();
+        dishDTO.setId(dishId);
+        Dish dish = new Dish();
+        dish.setId(dishId);
+
+        DishIngredient newIngredient = new DishIngredient(1L, 2L, 150); // New ingredient (id == null)
+        dish.setDishIngredients(List.of(newIngredient));
+
+        when(dishMapper.dishDTOToDish(dishDTO)).thenReturn(dish);
+        when(dishRepository.save(any(Dish.class))).thenReturn(dish);
+        when(dishMapper.dishToDishDTO(dish)).thenReturn(dishDTO);
+
+        // Mock the behavior of dishIngredientService and ingredientService
+        DishIngredientDTO dishIngredientDTO = new DishIngredientDTO();
+        dishIngredientDTO.setIngredientId(2L);
+        dishIngredientDTO.setWeight(150);
+        List<DishIngredientDTO> dishIngredientDTOList = List.of(dishIngredientDTO);
+
+        when(dishIngredientService.findAllByDishId(dishId)).thenReturn(dishIngredientDTOList);
+
+        IngredientDTO ingredientDTO = new IngredientDTO();
+        ingredientDTO.setId(2L);
+        ingredientDTO.setCaloriesPer100g(200.0);
+        when(ingredientService.findAllById(List.of(2L))).thenReturn(List.of(ingredientDTO));
+
+        // Act
+        DishDTO result = dishService.updateDish(dishId, dishDTO, null);
+
+        // Assert
+        assertEquals(dishDTO, result);
+        verify(dishRepository, atLeastOnce()).save(dish);
+        verify(dishIngredientService).findAllByDishId(dishId);
+        verify(ingredientService).findAllById(List.of(2L));
+
+        assertEquals(150, dish.getTotalWeight());
+        assertEquals(300, dish.getTotalCalories()); // 200 per 100g × 150g = 300
+    }
+
+
 }

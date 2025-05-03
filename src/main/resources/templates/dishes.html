@@ -61,17 +61,17 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${dishes.first} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/dishes(page=${dishes.number - 1}, dishType=${param.dishType})}">Previous</a>
+                       th:href="@{/dishes/all(page=${dishes.number - 1}, dishType=${param.dishType})}">Previous</a>
                 </li>
                 <li class="page-item" th:each="i : ${#numbers.sequence(0, dishes.totalPages - 1)}"
                     th:classappend="${dishes.number == i} ? 'active'">
                     <a class="page-link"
-                       th:href="@{/dishes(page=${i}, dishType=${param.dishType})}"
+                       th:href="@{/dishes/all(page=${i}, dishType=${param.dishType})}"
                        th:text="${i + 1}">1</a>
                 </li>
                 <li class="page-item" th:classappend="${dishes.last} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/dishes(page=${dishes.number + 1}, dishType=${param.dishType})}">Next</a>
+                       th:href="@{/dishes/all(page=${dishes.number + 1}, dishType=${param.dishType})}">Next</a>
                 </li>
             </ul>
         </nav>

@@ -9,7 +9,6 @@ import com.maksy.chefapp.mapper.DishMapper;
 import com.maksy.chefapp.model.Dish;
 import com.maksy.chefapp.model.DishIngredient;
 import com.maksy.chefapp.model.enums.DishType;
-import com.maksy.chefapp.repository.DishIngredientRepository;
 import com.maksy.chefapp.repository.DishRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -38,8 +37,6 @@ public class DishService {
     @Autowired
     private EntityManager entityManager;
 
-    @Autowired
-    private DishIngredientRepository dishIngredientRepository;
     @Autowired
     private DishIngredientService dishIngredientService;
     @Autowired
@@ -135,7 +132,8 @@ public class DishService {
                     newDishIngredients.add(new DishIngredient(dish.getId(), di.getIngredientId(), di.getWeight()));
                 }else {
                     newDishIngredients.add(di);
-                }            }
+                }
+            }
             dish.setDishIngredients(newDishIngredients);
         }
 

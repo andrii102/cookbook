@@ -1,6 +1,8 @@
 package com.maksy.chefapp.service;
 
 import com.maksy.chefapp.dto.IngredientDTO;
+import com.maksy.chefapp.exception.EntityNotFoundException;
+import com.maksy.chefapp.exception.StatusCodes;
 import com.maksy.chefapp.mapper.IngredientMapper;
 import com.maksy.chefapp.model.Ingredient;
 import com.maksy.chefapp.model.enums.IngredientCategory;
@@ -32,8 +34,9 @@ public class IngredientService {
                 .collect(toList());
     }
 
-    public Ingredient findById(Long ingredientId) {
-        return ingredientRepository.findById(ingredientId).orElse(null);
+    public IngredientDTO findById(Long ingredientId) {
+        Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(()->new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Ingredient not found"));
+        return ingredientMapper.ingredientToIngredientDTO(ingredient);
     }
 
     public List<IngredientDTO> findAllById(List<Long>  ingredientIds) {

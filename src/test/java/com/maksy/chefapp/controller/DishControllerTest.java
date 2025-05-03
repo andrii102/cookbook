@@ -1,19 +1,23 @@
 package com.maksy.chefapp.controller;
 
 import com.maksy.chefapp.dto.DishDTO;
+import com.maksy.chefapp.service.DishIngredientService;
 import com.maksy.chefapp.service.DishService;
+import com.maksy.chefapp.service.IngredientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@ExtendWith(MockitoExtension.class)
 class DishControllerTest {
 
     private MockMvc mockMvc;
@@ -24,19 +28,23 @@ class DishControllerTest {
     @InjectMocks
     private DishController dishController;
 
+    @Mock
+    private DishIngredientService dishIngredientService;
+
+    @Mock
+    private IngredientService ingredientService;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(dishController).build();
     }
 
     @Test
     void testShowAllDishes() throws Exception {
-        mockMvc.perform(get("/dishes"))
+        mockMvc.perform(get("/dishes/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dishes"));
     }
-
 
     @Test
     void testShowDishById() throws Exception {
@@ -130,7 +138,7 @@ class DishControllerTest {
 
     @Test
     void testAddDish() throws Exception {
-        mockMvc.perform(get("/dishes/add-dish"))
+        mockMvc.perform(get("/dishes/create-dish"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("editDish"));
     }

@@ -3,7 +3,6 @@ package com.maksy.chefapp.service;
 import com.maksy.chefapp.dto.DishIngredientDTO;
 import com.maksy.chefapp.mapper.DishIngredientMapper;
 import com.maksy.chefapp.model.DishIngredient;
-import com.maksy.chefapp.model.Ingredient;
 import com.maksy.chefapp.repository.DishIngredientRepository;
 import com.maksy.chefapp.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class DishIngredientService {

@@ -38,7 +38,13 @@ public class Dish {
 
     }
 
+    public Dish(String name, DishType type) {
+        this.type = type;
+        this.name = name;
+    }
+
     public void removeIngredients(List<Long> ingredientIds) {
+        if (dishIngredients == null) return;
         this.dishIngredients.removeIf(d -> ingredientIds.contains(d.getId()));
     }
 

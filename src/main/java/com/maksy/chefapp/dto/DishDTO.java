@@ -1,6 +1,5 @@
 package com.maksy.chefapp.dto;
 
-import com.maksy.chefapp.model.DishIngredient;
 import com.maksy.chefapp.model.enums.DishType;
 import lombok.Getter;
 import lombok.Setter;

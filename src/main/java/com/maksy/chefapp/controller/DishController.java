@@ -4,7 +4,6 @@ import com.maksy.chefapp.dto.DishDTO;
 import com.maksy.chefapp.dto.DishIngredientDTO;
 import com.maksy.chefapp.dto.IngredientDTO;
 import com.maksy.chefapp.model.Dish;
-import com.maksy.chefapp.model.DishIngredient;
 import com.maksy.chefapp.model.enums.DishType;
 import com.maksy.chefapp.service.DishIngredientService;
 import com.maksy.chefapp.service.DishService;
@@ -12,7 +11,6 @@ import com.maksy.chefapp.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +18,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -34,7 +31,7 @@ public class DishController {
     private IngredientService ingredientService;
 
 
-    @GetMapping
+    @GetMapping("/all")
     public String showAllDishes(@RequestParam(value = "page", defaultValue = "0") int page,
                                 @RequestParam(required = false) DishType dishType,
                                 Model model) {
@@ -66,7 +63,7 @@ public class DishController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("status", "Failed to delete dish. Please try again.");
         }
-        return "redirect:/dishes";
+        return "redirect:/dishes/all";
     }
 
     @GetMapping("/edit/{id}")
@@ -85,7 +82,7 @@ public class DishController {
             return "editDish";
         } else {
             redirectAttributes.addFlashAttribute("status", "Dish not found!");
-            return "redirect:/dishes";
+            return "redirect:/dishes/all";
         }
     }
 
@@ -97,14 +94,14 @@ public class DishController {
 
         dishService.updateDish(id, dishDTO, deleteIngredientIds);
         redirectAttributes.addFlashAttribute("status", "Dish updated successfully!");
-        return "redirect:/dishes";
+        return "redirect:/dishes/all";
     }
 
     @PostMapping("/save")
     public String saveDish(@ModelAttribute("dishDTO") DishDTO dishDTO, RedirectAttributes redirectAttributes) {
         dishService.createDish(dishDTO);
         redirectAttributes.addFlashAttribute("status", "Dish saved successfully!");
-        return "redirect:/dishes";
+        return "redirect:/dishes/all";
     }
 
 
