@@ -4,5 +4,7 @@ public enum IngredientCategory {
     VEGETABLE,
     SPICE,
     MEAT,
-    DAIRY;
+    DAIRY,
+    GRAIN,
+    OTHER;
 }

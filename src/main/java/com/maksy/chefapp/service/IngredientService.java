@@ -4,6 +4,8 @@ import com.maksy.chefapp.dto.IngredientDTO;
 import com.maksy.chefapp.exception.EntityNotFoundException;
 import com.maksy.chefapp.exception.StatusCodes;
 import com.maksy.chefapp.mapper.IngredientMapper;
+import com.maksy.chefapp.model.Dish;
+import com.maksy.chefapp.model.DishIngredient;
 import com.maksy.chefapp.model.Ingredient;
 import com.maksy.chefapp.model.enums.IngredientCategory;
 import com.maksy.chefapp.repository.IngredientRepository;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -56,5 +59,13 @@ public class IngredientService {
         System.out.println("Mapped ingredients: " + ingredientsDTO);
 
         return new PageImpl<>(ingredientsDTO, pageable, ingredientsPage.getTotalElements());
+    }
+
+    public IngredientDTO createIngredient(IngredientDTO ingredientDTO) {
+        Ingredient ingredient = ingredientMapper.ingredientDTOToIngredient(ingredientDTO);
+
+        ingredientRepository.save(ingredient);
+
+        return ingredientMapper.ingredientToIngredientDTO(ingredient);
     }
 }

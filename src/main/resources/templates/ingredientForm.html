@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${actionTitle}">Create Ingredient</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+</header>
+
+<main>
+    <div class="container mt-4 mb-4 content-with-sidebar">
+        <h2 th:text="${actionTitle}">Create Ingredient</h2>
+
+        <div th:if="${status != null}" class="alert" th:classappend="${status.contains('success') ? 'alert-success' : 'alert-danger'}">
+            <span th:text="${status}"></span>
+        </div>
+
+        <form th:action="@{${formAction}}" th:object="${ingredient}" method="post">
+            <div class="form-group mb-3">
+                <label for="name">Name</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Enter ingredient name" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="caloriesPer100g">Calories per 100g</label>
+                <input type="number" id="caloriesPer100g" th:field="*{caloriesPer100g}" class="form-control" step="0.01" min="0" placeholder="e.g. 52.5" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="category">Category</label>
+                <select id="category" th:field="*{category}" class="form-select" required>
+                    <option value="" disabled selected>Select category</option>
+                    <option th:each="cat : ${T(com.maksy.chefapp.model.enums.IngredientCategory).values()}"
+                            th:value="${cat}" th:text="${cat}"></option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Ingredient</button>
+            <a th:href="@{/ingredients}" class="btn btn-secondary">Back to Ingredients</a>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
