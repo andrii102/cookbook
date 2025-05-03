@@ -68,4 +68,20 @@ public class IngredientService {
 
         return ingredientMapper.ingredientToIngredientDTO(ingredient);
     }
+
+    public IngredientDTO updateIngredient(long id, IngredientDTO ingredientDTO) {
+        Ingredient ingredient = ingredientRepository.findById(id).orElseThrow(()->
+                new EntityNotFoundException(StatusCodes.ENTITY_NOT_FOUND.name(), "Ingredient not found"));
+
+        ingredient.setName(ingredientDTO.getName());
+        ingredient.setCaloriesPer100g(ingredientDTO.getCaloriesPer100g());
+        ingredient.setCategory(ingredientDTO.getCategory());
+
+        ingredientRepository.save(ingredient);
+        return ingredientMapper.ingredientToIngredientDTO(ingredient);
+    }
+
+    public void deleteIngredient(Long id) {
+        ingredientRepository.deleteById(id);
+    }
 }
