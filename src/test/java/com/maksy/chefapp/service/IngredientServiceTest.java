@@ -93,4 +93,67 @@ class IngredientServiceTest {
         assertEquals(1, result.getContent().size());
         verify(ingredientRepository).findAllByCategory(eq(category), eq(pageable));
     }
+
+    @Test
+    void testCreateIngredient() {
+        IngredientDTO ingredientDTO = new IngredientDTO();
+        Ingredient ingredient = new Ingredient();
+
+        when(ingredientMapper.ingredientDTOToIngredient(ingredientDTO)).thenReturn(ingredient);
+        when(ingredientMapper.ingredientToIngredientDTO(ingredient)).thenReturn(ingredientDTO);
+
+        IngredientDTO result = ingredientService.createIngredient(ingredientDTO);
+
+        verify(ingredientRepository).save(ingredient);
+        assertEquals(ingredientDTO, result);
+    }
+
+    @Test
+    void testUpdateIngredient_Success() {
+        long id = 1L;
+        Ingredient ingredient = new Ingredient();
+        ingredient.setId(id);
+        ingredient.setName("Old Name");
+        ingredient.setCaloriesPer100g(100.0);
+        ingredient.setCategory(IngredientCategory.VEGETABLE);
+
+        IngredientDTO updatedDTO = new IngredientDTO();
+        updatedDTO.setName("New Name");
+        updatedDTO.setCaloriesPer100g(50.0);
+        updatedDTO.setCategory(IngredientCategory.MEAT);
+
+        when(ingredientRepository.findById(id)).thenReturn(Optional.of(ingredient));
+        when(ingredientMapper.ingredientToIngredientDTO(any())).thenReturn(updatedDTO);
+
+        IngredientDTO result = ingredientService.updateIngredient(id, updatedDTO);
+
+        assertEquals("New Name", ingredient.getName());
+        assertEquals(50, ingredient.getCaloriesPer100g());
+        assertEquals(IngredientCategory.MEAT, ingredient.getCategory());
+
+        verify(ingredientRepository).save(ingredient);
+        assertEquals(updatedDTO, result);
+    }
+
+    @Test
+    void testUpdateIngredient_NotFound() {
+        long id = 1L;
+        IngredientDTO dto = new IngredientDTO();
+
+        when(ingredientRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> ingredientService.updateIngredient(id, dto));
+        verify(ingredientRepository, never()).save(any());
+    }
+
+    @Test
+    void testDeleteIngredient() {
+        long id = 1L;
+
+        ingredientService.deleteIngredient(id);
+
+        verify(ingredientRepository).deleteById(id);
+    }
+
+
 }

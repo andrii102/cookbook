@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     @Autowired
-    private JavaMailSender mailSender;
+    JavaMailSender mailSender;
 
     @Value("${error.mail.to}")
-    private String to;
+    String to;
 
     public void sendErrorNotification(String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();

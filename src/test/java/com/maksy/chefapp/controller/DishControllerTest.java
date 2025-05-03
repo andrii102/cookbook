@@ -79,7 +79,7 @@ class DishControllerTest {
 
         mockMvc.perform(get("/dishes/delete/1"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dishes"))
+                .andExpect(redirectedUrl("/dishes/all"))
                 .andExpect(flash().attribute("status", "Dish deleted successfully!"));
     }
 
@@ -90,7 +90,7 @@ class DishControllerTest {
 
         mockMvc.perform(get("/dishes/delete/999"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dishes"))
+                .andExpect(redirectedUrl("/dishes/all"))
                 .andExpect(flash().attribute("status", "Failed to delete dish. Please try again."));
     }
 
@@ -118,7 +118,7 @@ class DishControllerTest {
 
         mockMvc.perform(get("/dishes/edit/999"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dishes"))
+                .andExpect(redirectedUrl("/dishes/all"))
                 .andExpect(flash().attribute("status", "Dish not found!"));
     }
 
@@ -132,7 +132,7 @@ class DishControllerTest {
         mockMvc.perform(post("/dishes/save")
                         .param("name", "New Dish"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dishes"))
+                .andExpect(redirectedUrl("/dishes/all"))
                 .andExpect(flash().attribute("status", "Dish saved successfully!"));
     }
 
