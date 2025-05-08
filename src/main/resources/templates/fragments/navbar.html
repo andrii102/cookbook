@@ -2,58 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="navbar">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Cookbook</a>
-            <!-- Toggler button only visible on small screens -->
-            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+            <a class="navbar-brand fw-bold" href="/">Cookbook</a>
+
+            <!-- Toggler for mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/dishes/all}">All Dishes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/dishes/create-dish}">Create Dish</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/ingredients}">Ingredients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/ingredients/create-ingredient}">Create Ingredient</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/about}">About Cookbook</a>
+                    </li>
+                </ul>
+
+            </div>
         </div>
     </nav>
-
-    <div class="d-none d-lg-block bg-light position-fixed vh-100 sidebar">
-        <div class="sidebar-content">
-            <h5 class="mb-3">Menu</h5>
-            <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" th:href="@{/dishes/all}">All Dishes</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/dishes/create-dish}">Create Dish</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/ingredients}">Ingredients</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/ingredients/create-ingredient}">Create ingredient</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/about}">About Cookbook</a></li>
-            </ul>
-        </div>
-    </div>
-
-
-    <!-- Offcanvas sidebar for small screens -->
-    <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/dishes/all}">All Dishes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/add-dish}">Add Dish</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/ingredients}">Ingredients</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/ingredients/create-ingredient}">Create ingredient</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/about}">About Cookbook</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
 </div>
 </body>
 </html>
