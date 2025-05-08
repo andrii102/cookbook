@@ -17,4 +17,11 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 
     @Query("SELECT i FROM Ingredient i WHERE (:ingredientCategory IS NULL OR i.category = :ingredientCategory) ")
     Page<Ingredient> findAllByCategory(@Param("ingredientCategory") IngredientCategory ingredientCategory, Pageable pageable);
+
+    @Query("SELECT i FROM Ingredient i WHERE (:ingredientCategory IS NULL OR i.category = :ingredientCategory) AND" +
+            "(:caloriesFrom IS NULL OR i.caloriesPer100g >= :caloriesFrom) AND" +
+            "(:caloriesTo IS NULL OR i.caloriesPer100g <= :caloriesTo)")
+    Page<Ingredient> findAllFiltered(@Param("ingredientCategory") IngredientCategory ingredientCategory, Double caloriesFrom,
+                                     Double caloriesTo, Pageable pageable);
+
 }

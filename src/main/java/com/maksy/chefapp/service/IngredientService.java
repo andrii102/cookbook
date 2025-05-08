@@ -12,6 +12,7 @@ import com.maksy.chefapp.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -51,12 +52,9 @@ public class IngredientService {
 
     public Page<IngredientDTO> getAllingredientsByCatagory(IngredientCategory ingredientCategory, Pageable pageable) {
         Page<Ingredient> ingredientsPage = ingredientRepository.findAllByCategory(ingredientCategory, pageable);
-        List<Ingredient> ingredients = ingredientsPage.getContent();
-        System.out.println(ingredients);
         List<IngredientDTO> ingredientsDTO = ingredientsPage.getContent().stream()
                 .map(ingredientMapper::ingredientToIngredientDTO)
                 .toList();
-        System.out.println("Mapped ingredients: " + ingredientsDTO);
 
         return new PageImpl<>(ingredientsDTO, pageable, ingredientsPage.getTotalElements());
     }
@@ -83,5 +81,17 @@ public class IngredientService {
 
     public void deleteIngredient(Long id) {
         ingredientRepository.deleteById(id);
+    }
+
+    public Page<IngredientDTO> getAllingredientsFiltered(IngredientCategory ingredientCategory, Double caloriesFrom,
+                                                         Double caloriesTo, Pageable pageable) {
+        Page<Ingredient> ingredientPage = ingredientRepository.findAllFiltered(ingredientCategory, caloriesFrom,
+                caloriesTo, pageable);
+
+        List<IngredientDTO> ingredientDTOS = ingredientPage.getContent().stream()
+                .map(ingredientMapper::ingredientToIngredientDTO)
+                .toList();
+
+        return new PageImpl<>(ingredientDTOS, pageable, ingredientPage.getTotalElements());
     }
 }

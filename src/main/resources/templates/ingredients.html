@@ -30,6 +30,16 @@
                     <option value="OTHER" th:selected="${param.ingredientCategory == 'OTHER'}">Other</option>
                 </select>
             </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Calories: </label>
+                <div class="input-group">
+                    <input type="number" min="0" step="0.1" id="caloriesFrom" name="caloriesFrom" class="form-control" placeholder="from" th:value="${param.caloriesFrom}">
+                    <span class="input-group-text">-</span>
+                    <input type="number" min="0" step="0.1" id="caloriesTo" name="caloriesTo" class="form-control" placeholder="to" th:value="${param.caloriesTo}">
+                </div>
+            </div>
+
             <div class="col-md-2 align-self-end">
                 <button type="submit" class="btn btn-primary">Apply</button>
             </div>

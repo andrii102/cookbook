@@ -25,8 +25,11 @@ public class IngredientController {
     @GetMapping
     public String getAllIngredients(@RequestParam(value = "page", defaultValue = "0") int page,
                                     @RequestParam(required = false) IngredientCategory ingredientCategory,
+                                    @RequestParam(required = false) Double caloriesFrom,
+                                    @RequestParam(required = false) Double caloriesTo,
                                     Model model) {
-        Page<IngredientDTO> ingredientsPage = ingredientService.getAllingredientsByCatagory(ingredientCategory, PageRequest.of(page, 6));
+        Page<IngredientDTO> ingredientsPage = ingredientService.getAllingredientsFiltered(ingredientCategory,
+                caloriesFrom, caloriesTo, PageRequest.of(page, 6));
         model.addAttribute("ingredients", ingredientsPage);
         return "ingredients";
     }
